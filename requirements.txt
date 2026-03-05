@@ -1,0 +1,14 @@
+# Gemini AI
+google-generativeai>=0.3.0      # Step 1: Gemini 2.5 Flash metadata (legacy SDK)
+google-genai>=1.0.0             # Step 3: Gemini 3.1 Flash image generation (new SDK)
+
+# Google Cloud
+google-cloud-storage>=2.0.0     # GCS image hosting
+google-cloud-secret-manager>=2.0.0  # Secret Manager (Cloud Run)
+
+# Image processing
+Pillow>=10.0.0
+
+# HTTP & utilities
+requests>=2.32.0
+python-dotenv>=1.0.0
