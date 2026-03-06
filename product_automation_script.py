@@ -185,6 +185,43 @@ def upload_bytes_to_gcs(data: bytes, blob_name: str, content_type: str = "image/
     return blob.public_url
 
 
+def download_from_gcs(gcs_path: str) -> str:
+    """
+    Download a file from GCS to local temp directory.
+    Returns local file path.
+    
+    gcs_path: gs://bucket/path/to/file OR https://storage.googleapis.com/bucket/path
+    """
+    import tempfile
+    import urllib.parse
+    
+    # Parse GCS path
+    if gcs_path.startswith("gs://"):
+        path_parts = gcs_path[5:].split("/", 1)
+        bucket_name = path_parts[0]
+        blob_name = path_parts[1] if len(path_parts) > 1 else ""
+    elif "storage.googleapis.com" in gcs_path:
+        parsed = urllib.parse.urlparse(gcs_path)
+        parts = parsed.path.lstrip("/").split("/", 1)
+        bucket_name = parts[0]
+        blob_name = parts[1] if len(parts) > 1 else ""
+    else:
+        # Not a GCS path, return as-is
+        return gcs_path
+    
+    # Download to temp file
+    from google.cloud import storage
+    client = storage.Client(project=GOOGLE_CLOUD_PROJECT)
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    
+    # Create temp file with same extension
+    ext = Path(blob_name).suffix
+    with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
+        blob.download_to_filename(tmp.name)
+        return tmp.name
+
+
 # =========================================================================
 #  Step 1 — Gemini 2.5 Flash metadata generation
 # =========================================================================
@@ -304,8 +341,24 @@ def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = Non
             continue
 
         image_path = row.get("Image Path", "").strip()
-        if not image_path or not os.path.isfile(image_path):
-            log.warning("  [%s] missing image: %s", sku, image_path)
+        if not image_path:
+            log.warning("  [%s] missing image path", sku)
+            state.setdefault("step1", {})[sku] = "failed_no_image"
+            save_state(state)
+            continue
+        
+        # Download from GCS if needed
+        if image_path.startswith("gs://") or "storage.googleapis.com" in image_path:
+            try:
+                image_path = download_from_gcs(image_path)
+            except Exception as exc:
+                log.error("  [%s] failed to download from GCS: %s", sku, exc)
+                state.setdefault("step1", {})[sku] = "failed_download"
+                save_state(state)
+                continue
+        
+        if not os.path.isfile(image_path):
+            log.warning("  [%s] image not found: %s", sku, image_path)
             state.setdefault("step1", {})[sku] = "failed_no_image"
             save_state(state)
             continue
@@ -386,10 +439,23 @@ def step2_generate_printify_mockups(rows: List[dict], state: dict, single_sku: s
             continue
 
         image_path = row.get("Image Path", "").strip()
-        if not image_path or not os.path.isfile(image_path):
+        if not image_path:
+            continue
+        
+        # Download from GCS if needed
+        local_path = image_path
+        if image_path.startswith("gs://") or "storage.googleapis.com" in image_path:
+            try:
+                local_path = download_from_gcs(image_path)
+            except Exception as exc:
+                log.error("  [%s] failed to download from GCS: %s", sku, exc)
+                continue
+        
+        if not os.path.isfile(local_path):
+            log.warning("  [%s] image not found: %s", sku, local_path)
             continue
 
-        design_name = Path(image_path).stem
+        design_name = Path(local_path).stem
 
         # Skip if we already have all mockups for this design
         if design_name in mockup_meta and len(mockup_meta[design_name]) >= len(VARIANT_MAP):
@@ -399,7 +465,7 @@ def step2_generate_printify_mockups(rows: List[dict], state: dict, single_sku: s
         # Upload design to GCS
         log.info("  [%s] uploading to GCS...", sku)
         try:
-            design_url = upload_to_gcs(image_path, f"designs/{design_name}.png")
+            design_url = upload_to_gcs(local_path, f"designs/{design_name}.png")
         except Exception as exc:
             log.error("  [%s] GCS upload failed: %s", sku, exc)
             continue

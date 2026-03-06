@@ -1,0 +1,104 @@
+SKU #,Product Name,Design Theme,Primary Colors,Keywords / Tags,Description Teaser,Description,Image Path
+1,Rainbow Teddy Bear ,Kawaii,Rainbow,,,,gs://tipcat-product-designs/designs/rainbow_bear_pattern.png
+2,Midnight Bat Puppy,Goth Kawaii,"Black, Deep Purple","Goth Dog, Bat Wings, Dark Academia Phone Case",A hauntingly cute companion for your late-night scrolls.,,gs://tipcat-product-designs/designs/gothic_cinnamonroll_coffee.png
+3,The Entomologist’s Study,Vintage / Goth,"Sepia, Forest Green","Moth Art, Beetle Print, Nature Goth",A curated collection of forest finds for your everyday carry.,,gs://tipcat-product-designs/designs/Bug_pattern.png
+4,Cinnamonroll Espresso,Coastal / Kawaii,Light Blue,"Cinnamoroll Style, Puppy Art, Minimalist Brown","A warm, cozy hug for your phone in espresso tones.",,gs://tipcat-product-designs/designs/blue_cinnamonroll_coffee_pattern.png
+5,Miffy Pink Strawberry,Kawaii,"Pink, Red",,,,gs://tipcat-product-designs/designs/miffy_stawberry_patten.png
+6,Nautical Toile Illustration,Vintage / Coastal,"White, Blue",,,,gs://tipcat-product-designs/designs/blue_nautical_pattern.png
+7,Toile Floral Illustration ,Vintage / Floral,"White, Blue",,,,gs://tipcat-product-designs/designs/blue_toile.png
+8,Blue Tortois Shell,Nature,"Blue, Black",,,,gs://tipcat-product-designs/designs/blue_turtle_shell.png
+9,Floral Pattern,Vintage / Floral,"Red, Green, Yellow",,,,gs://tipcat-product-designs/designs/floral_vibrant_1.png
+10,Orange Turtle Shell,Nature,"Orange, Black",,,,gs://tipcat-product-designs/designs/turtle_shell.png
+11,Pink Floral Miffy ,Kawaii,"Pink, White",,,,gs://tipcat-product-designs/designs/miffy_pink_floral.png
+12,Dark Purple Goth Floral,Goth / Floral,"Purple, Black",,,,gs://tipcat-product-designs/designs/purple_floral_1.png
+13,Blue Polka Dot,Kawaii / Simple,"Blue, White",,,,gs://tipcat-product-designs/designs/blue_polkadot_pattern.png
+14,Teal Hello Kitty Shell Mermaid ,Kawaii / Coastal,"Teal, Blue, Pink",,,,gs://tipcat-product-designs/designs/teal_iridescent_cat_pattern.png
+15,Pompom Purin Melted Smiley,Kawaii / Y2K,"Yellow, Green",,,,gs://tipcat-product-designs/designs/pompom_matcha_pattern.png
+16,Yellow Polka Dot,Pastl,"Yellow, White",,,,gs://tipcat-product-designs/designs/yellow_polkadot_pattern.png
+17,Lilac Polka Dot,Pastel,"Purple, White",,,,gs://tipcat-product-designs/designs/purple_polkadot_pattern.png
+18,Pink Polka Dot,Pastel,"Pink, White",,,,gs://tipcat-product-designs/designs/pink_polkadot_pattern.png
+19,Peach Polka Dot,Pastel,"Peach, White",,,,gs://tipcat-product-designs/designs/peach_polkadot_pattern.png
+20,Light Green Polka Dot,Pastel,"Green, White",,,,gs://tipcat-product-designs/designs/green_polkadot_pattern.png
+21,Sage Green Polka Dot,Simple,"Sage, White",,,,gs://tipcat-product-designs/designs/forest_green_polkadot_pattern.png
+22,Burgandy Polka Dot,Simple,"Burgandy, White",,,,gs://tipcat-product-designs/designs/burgandy_polkadot_pattern.png
+23,Coffee Polka Dot,Simple,"Brown, White",,,,gs://tipcat-product-designs/designs/brown_polkadot_pattern_6.png
+24,Cream Polka Dot,Simple,"Cream, Brown",,,,gs://tipcat-product-designs/designs/brown_polkadot_pattern_4.png
+25,Cream Polka Dot 2,Simple ,"Cream, Brown",,,,gs://tipcat-product-designs/designs/brown_polkadot_pattern_4.png
+26,Tan Polka Dot,Simple,"Tan, Brown",,,,gs://tipcat-product-designs/designs/brown_polkadot_pattern_2.png
+27,Mocha Polka Dot,Simple,"Brown, Cream",,,,gs://tipcat-product-designs/designs/brown_polkadot_pattern_1.png
+28,Pastel Blue Checkered,Simple,Blue,,,,gs://tipcat-product-designs/designs/blue_checker_pattern_1.png
+29,Pastel Pink Checkered,Simple,Pink,,,,gs://tipcat-product-designs/designs/pink_checker_pattern_1.png
+30,Pastel Green Checkered,Simple,Green,,,,gs://tipcat-product-designs/designs/green_checker_pattern_1.png
+31,Pastel Blue Stripes,Simple,"Blue, White",,,,gs://tipcat-product-designs/designs/blue_pinstrips_pattern_1.png
+32,Peach Stripes,Simple,"Peach, White",,,,gs://tipcat-product-designs/designs/peach_pinstrips_pattern_1.png
+33,Lilac Stripes,Simple,"Lilac, White",,,,gs://tipcat-product-designs/designs/purple_pinstrips_pattern_1.png
+34,Sage Green Stripes,Simple,"Sage, White",,,,gs://tipcat-product-designs/designs/sage_pinstrips_pattern_1.png
+35,Stained Glass Mushroom,Cottagecore,"Green, Red",,,,gs://tipcat-product-designs/designs/stained_glass_cottagecore_1.png
+36,Stained Glass Waves,Coastal,"Tan, Blue",,,,gs://tipcat-product-designs/designs/mosaic_beach_sand_wave.png
+37,Stained Glass Stars and Moon,Celestial,"Purple, Gold",,,,gs://tipcat-product-designs/designs/stained_glass_celestial_moons.png
+38,Coral,Coastal,"Green, Orange, Tan",,,,gs://tipcat-product-designs/designs/coral_reef.png
+39,Stained Glass Ocean Sunrise,Coastal,"Orange, Blue, Brown",,,,gs://tipcat-product-designs/designs/stained_glass_cloudy_sunset.png
+40,Stained Glass Sunset,Coastal,"Orange, Yellow, Purple",,,,
+41,Green Totoro Checkerboard,Kawaii,"Sage, Cream",,,,gs://tipcat-product-designs/designs/totoro_grid_pattern.png
+42,Mosaic Swirl,Coastal,"Pink, Blue, White",,,,gs://tipcat-product-designs/designs/mosaic_spiral.png
+43,Mosaic Hokusai Wave,Coastal,"Blue, White, Gray",,,,gs://tipcat-product-designs/designs/mosaic_hokusai_wave.png
+44,Stained Glass Sunset,Kawaii,"Pink, Blue, Yellow",,,,gs://tipcat-product-designs/designs/stained_glass_cloudy_sunset.png
+45,Stained Glass Palm Tree,Coastal,"Pink, Brown, Green",,,,gs://tipcat-product-designs/designs/pink_palm_trees_coconuts.png
+46,Glowing Jellyfish Mosaic,Coastal,"Pink, Blue, Teal",,,,gs://tipcat-product-designs/designs/glowing_jellyfish.png
+47,Plumeria Stained Glass,Floral,"Green, Yellow, Pink",,,,gs://tipcat-product-designs/designs/plumeria_stained_glass.png
+48,Nautilus Shell Stained Glass,Coastal,"Peach, Cream",,,,gs://tipcat-product-designs/designs/stained_glass_nautilus_shell.png
+49,Honey Bee Stained Glass,Floral,"Orange, Yellow",,,,gs://tipcat-product-designs/designs/stained_glass_honey_hive.png
+50,Silver & Gold Koi Fish Mosaic,Coastal,"Gold, Silver, Black",,,,gs://tipcat-product-designs/designs/silver_gold_koi.png
+51,Mosaic Galaxy Swirl,Celestial,"Black, Purple, Blue",,,,
+52,Embroidered Totoro,Kawaii,"Green, White, Black",,,,gs://tipcat-product-designs/designs/totoro_embroidered_stripes.png
+53,Watercolor Sage Floral Print,Floral,"Sage, White",,,,gs://tipcat-product-designs/designs/sage_green_plant_1.png
+54,Sage Marble ,Nature,Sage,,,,gs://tipcat-product-designs/designs/sage_green_mable.png
+55,Sage Fog,Nature,Sage,,,,gs://tipcat-product-designs/designs/sage_green_fog.png
+56,Fern Fronds Print,Nature,"Sage, White",,,,gs://tipcat-product-designs/designs/sage_fern_pattern_1.png
+57,Blue Miffy Pattern,Kawaii,"Blue, White",,,,gs://tipcat-product-designs/designs/miffy_pattern_blue.png
+58,Ancient Pines Inkwash,Nature,"Black, White",,,,gs://tipcat-product-designs/designs/inkwash_tree.png
+59,Soft Pink Floral Pattern,Floral,"Pink, Green, White",,,,gs://tipcat-product-designs/designs/floral_pattern_1.png
+60,Rustic Leaf & Mushroom,Cottagecore,"Brown, Green",,,,gs://tipcat-product-designs/designs/cottage_core_mushroom.png
+61,Cloudy Cinnamon Roll,Kawaii,"Pink, Blue, White",,,,gs://tipcat-product-designs/designs/cloudy_cinnamonroll.png
+62,Cinnamonroll CD Store,Kawaii,"Blue, White, Pink",,,,gs://tipcat-product-designs/designs/cinnamonroll_cdstore.png
+63,Black Cat Void,"Kawaii, Goth","Black, White",,,,gs://tipcat-product-designs/designs/cat_scribble_pattern.png
+64,Plaid Flannel Floral Pattern,"Floral, Nature","Brown, Cream, Yellow",,,,gs://tipcat-product-designs/designs/brown_plaid_floral.png
+65,Stained Glass Pearl,,,,,,gs://tipcat-product-designs/designs/Stained_glass_pearl.png
+66,Stained Glass Sunset,,,,,,gs://tipcat-product-designs/designs/Stained_glass_sunset.png
+67,Stainedglass Pearl Scale,,,,,,gs://tipcat-product-designs/designs/Stainedglass_pearl_scale.png
+68,Sunset Sand Stained Glass,,,,,,gs://tipcat-product-designs/designs/Sunset_sand_stained_glass.png
+69,Aquatic Nautilus Stained Glass,,,,,,gs://tipcat-product-designs/designs/aquatic_nautilus_stained_glass.png
+70,Blue Camo,,,,,,gs://tipcat-product-designs/designs/blue_camo.png
+71,Brown Polkadot Pattern 3,,,,,,gs://tipcat-product-designs/designs/brown_polkadot_pattern_3.png
+72,Brown Polkadot Pattern 5,,,,,,gs://tipcat-product-designs/designs/brown_polkadot_pattern_5.png
+73,Copper Pattern 1,,,,,,gs://tipcat-product-designs/designs/copper_pattern_1.png
+74,Coral Flowers,,,,,,gs://tipcat-product-designs/designs/coral_flowers.png
+75,Floral Vibrant 2,,,,,,gs://tipcat-product-designs/designs/floral_vibrant_2.png
+76,Floral Vibrant Cat,,,,,,gs://tipcat-product-designs/designs/floral_vibrant_cat.png
+77,Galaxy Spiral,,,,,,gs://tipcat-product-designs/designs/galaxy_spiral.png
+78,Ghibli Totoro Pattern,,,,,,gs://tipcat-product-designs/designs/ghibli_totoro_pattern.png
+79,Green Crows Pattern,,,,,,gs://tipcat-product-designs/designs/green_crows_pattern.png
+80,Green Fern Pattern,,,,,,gs://tipcat-product-designs/designs/green_fern_pattern.png
+81,Hello Kitty Red Pomegranate Pattern,,,,,,gs://tipcat-product-designs/designs/hello_kitty_red_pomegranate_pattern.png
+82,Macabre Pattern,,,,,,gs://tipcat-product-designs/designs/macabre_pattern.png
+83,Miffy Blueberry Pattern,,,,,,gs://tipcat-product-designs/designs/miffy_blueberry_pattern.png
+84,Miffy Peach Pattern,,,,,,gs://tipcat-product-designs/designs/miffy_peach_pattern.png
+85,Mosaic Lighthouse,,,,,,gs://tipcat-product-designs/designs/mosaic_lighthouse.png
+86,Mosaic Wave,,,,,,gs://tipcat-product-designs/designs/mosaic_wave.png
+87,Mosaic Wave Blue,,,,,,gs://tipcat-product-designs/designs/mosaic_wave_blue.png
+88,Peach Checker Pattern 1,,,,,,gs://tipcat-product-designs/designs/peach_checker_pattern_1.png
+89,Peacock Feathers,,,,,,gs://tipcat-product-designs/designs/peacock_feathers.png
+90,Pink Pinstrips Pattern 1,,,,,,gs://tipcat-product-designs/designs/pink_pinstrips_pattern_1.png
+91,Plumnoir Dark Academia Pattern,,,,,,gs://tipcat-product-designs/designs/plumnoir_dark_academia_pattern.png
+92,Pomegranate Pattern,,,,,,gs://tipcat-product-designs/designs/pomegranate_pattern.png
+93,Sanrio Brown Pink Cafe,,,,,,gs://tipcat-product-designs/designs/sanrio_brown_pink_cafe.png
+94,Sanrio Brown Pink Cafe Tile,,,,,,gs://tipcat-product-designs/designs/sanrio_brown_pink_cafe_tile.png
+95,Sanrio Brown Pink Tile,,,,,,gs://tipcat-product-designs/designs/sanrio_brown_pink_tile.png
+96,Stained Glass Hokusai Wave,,,,,,gs://tipcat-product-designs/designs/stained_glass_hokusai_wave.png
+97,Stainglass Koi 1,,,,,,gs://tipcat-product-designs/designs/stainglass_koi_1.png
+98,Stainglass Koi 2,,,,,,gs://tipcat-product-designs/designs/stainglass_koi_2.png
+99,Stainglass Koi 3,,,,,,gs://tipcat-product-designs/designs/stainglass_koi_3.png
+100,Stainglass Koi 4,,,,,,gs://tipcat-product-designs/designs/stainglass_koi_4.png
+101,Stainglass Peacock,,,,,,gs://tipcat-product-designs/designs/stainglass_peacock.png
+102,Stainglass Psych 1,,,,,,gs://tipcat-product-designs/designs/stainglass_psych_1.png
+103,Teddy Bear Seamless Pattern,,,,,,gs://tipcat-product-designs/designs/teddy_bear_seamless_pattern.png
