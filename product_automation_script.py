@@ -261,15 +261,47 @@ Return the JSON object now:"""
 def _extract_json(text: str) -> dict:
     """Pull JSON object from Gemini response (may be wrapped in markdown)."""
     text = text.strip()
+    
+    # Strategy 1: Direct JSON
     if text.startswith("{"):
-        return json.loads(text)
-    m = re.search(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", text)
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            pass  # Try other strategies
+    
+    # Strategy 2: Extract from markdown code blocks
+    m = re.search(r"```(?:json)?\s*([\s\S]*?)```", text, re.IGNORECASE)
     if m:
-        return json.loads(m.group(1))
+        json_text = m.group(1).strip()
+        try:
+            return json.loads(json_text)
+        except json.JSONDecodeError:
+            pass
+    
+    # Strategy 3: Find JSON object boundaries
     m = re.search(r"\{[\s\S]*\}", text)
     if m:
-        return json.loads(m.group(0))
-    raise ValueError(f"No JSON found in response: {text[:120]}")
+        json_text = m.group(0)
+        try:
+            return json.loads(json_text)
+        except json.JSONDecodeError as e:
+            # Strategy 4: Try to fix common issues
+            # Remove trailing commas before closing braces/brackets
+            cleaned = re.sub(r',\s*([}\]])', r'\1', json_text)
+            try:
+                return json.loads(cleaned)
+            except json.JSONDecodeError:
+                # Log the specific error and position
+                lines = json_text.split('\n')
+                error_line = min(e.lineno - 1, len(lines) - 1) if hasattr(e, 'lineno') else 0
+                context = lines[error_line] if error_line < len(lines) else "N/A"
+                raise ValueError(
+                    f"JSON parse error at line {e.lineno}, col {e.colno}: {e.msg}\n"
+                    f"Context: {context[:100]}\n"
+                    f"First 200 chars: {json_text[:200]}"
+                )
+    
+    raise ValueError(f"No valid JSON found in response. First 200 chars: {text[:200]}")
 
 
 def _validate_metadata(meta: dict) -> List[str]:
@@ -312,7 +344,7 @@ def _preprocess_image(image_path: str) -> str:
     return str(out_path)
 
 
-def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = None):
+def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = None, limit: int = None):
     """
     Step 1: For each design PNG, call Gemini 2.5 Flash to produce
     title / description / tags / shopify_html.
@@ -321,6 +353,9 @@ def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = Non
     genai.configure(api_key=GEMINI_API_KEY)
 
     results: List[dict] = []
+    success_count = 0
+    failed_count = 0
+    skipped_count = 0
 
     # Load existing results if resuming
     if METADATA_PATH.exists():
@@ -330,6 +365,8 @@ def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = Non
     else:
         done_skus = set()
 
+    # Filter rows for processing
+    rows_to_process = []
     for row in rows:
         sku = row.get("SKU #", row.get("SKU", "")).strip()
         if not sku:
@@ -337,8 +374,21 @@ def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = Non
         if single_sku and sku != single_sku:
             continue
         if sku in done_skus:
-            log.info("  [%s] already done — skipping", sku)
+            skipped_count += 1
             continue
+        rows_to_process.append(row)
+    
+    # Apply limit if specified
+    if limit and len(rows_to_process) > limit:
+        log.info("  Limiting to first %d products (use --limit to change)", limit)
+        rows_to_process = rows_to_process[:limit]
+    
+    total_to_process = len(rows_to_process)
+    log.info("  Processing %d products (%d already done, %d skipped)", 
+             total_to_process, len(done_skus), skipped_count - len(done_skus))
+
+    for idx, row in enumerate(rows_to_process, 1):
+        sku = row.get("SKU #", row.get("SKU", "")).strip()
 
         image_path = row.get("Image Path", "").strip()
         if not image_path:
@@ -372,11 +422,13 @@ def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = Non
         )
         processed = _preprocess_image(image_path)
 
-        log.info("  [%s] %s — analysing...", sku, product_name)
+        log.info("  [%d/%d] [%s] %s — analysing...", idx, total_to_process, sku, product_name)
         try:
+            model = genai.GenerativeModel(GEMINI_MODEL)
+            img = Image.open(processed)
+            
+            # First attempt
             def _call():
-                model = genai.GenerativeModel(GEMINI_MODEL)
-                img = Image.open(processed)
                 resp = model.generate_content(
                     [prompt, img],
                     generation_config={"temperature": 0.4, "max_output_tokens": 2048},
@@ -384,7 +436,45 @@ def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = Non
                 return resp.text
 
             raw = retry(_call)
-            meta = _extract_json(raw)
+            
+            # Try to parse JSON with retry on parse errors
+            parse_attempts = 0
+            max_parse_attempts = 2
+            meta = None
+            
+            while parse_attempts < max_parse_attempts:
+                try:
+                    meta = _extract_json(raw)
+                    break  # Success
+                except (json.JSONDecodeError, ValueError) as parse_err:
+                    parse_attempts += 1
+                    if parse_attempts >= max_parse_attempts:
+                        raise  # Give up
+                    
+                    log.warning("  [%s] JSON parse error (attempt %d/%d): %s", 
+                              sku, parse_attempts, max_parse_attempts, str(parse_err)[:100])
+                    
+                    # Ask Gemini to reformat - simpler prompt
+                    reformat_prompt = f"""The previous response had a JSON formatting error. Please provide ONLY a valid JSON object with no markdown, no code blocks, no extra text.
+
+Required JSON structure:
+{{
+  "title": "string (max 60 chars)",
+  "teaser": "string (1-2 sentences)",
+  "full_description": "string (2-3 paragraphs)",
+  "tags": ["exactly 13 tags"],
+  "shopify_html": "<p>HTML description</p>"
+}}
+
+Product: {product_name}
+Return ONLY the JSON object:"""
+                    
+                    resp = model.generate_content(
+                        [reformat_prompt, img],
+                        generation_config={"temperature": 0.2, "max_output_tokens": 2048},
+                    )
+                    raw = resp.text
+            
             errors = _validate_metadata(meta)
             status = "success" if not errors else "needs_review"
 
@@ -402,14 +492,19 @@ def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = Non
                 "generated_timestamp": datetime.utcnow().isoformat() + "Z",
             })
             state.setdefault("step1", {})[sku] = status
+            success_count += 1
+            log.info("    ✓ Success (%d/%d complete)", success_count, total_to_process)
         except Exception as exc:
             log.error("  [%s] failed: %s", sku, exc)
             state.setdefault("step1", {})[sku] = f"failed: {exc}"
+            failed_count += 1
 
         save_state(state)
         METADATA_PATH.write_text(json.dumps(results, indent=2))
 
-    log.info("Step 1 complete — %d products in %s", len(results), METADATA_PATH)
+    log.info("Step 1 complete — %d success, %d failed, %d skipped", 
+             success_count, failed_count, skipped_count)
+    log.info("  Output: %s (%d total products)", METADATA_PATH, len(results))
     return results
 
 
@@ -1069,6 +1164,7 @@ def main():
     parser = argparse.ArgumentParser(description="Tip Cat Studios Product Automation Pipeline")
     parser.add_argument("--step", type=int, choices=[1, 2, 3, 4, 5], help="Run a single step")
     parser.add_argument("--sku", type=str, help="Process a single SKU only")
+    parser.add_argument("--limit", type=int, help="Process only first N products")
     parser.add_argument("--resume", action="store_true", help="Resume from checkpoint (default behaviour)")
     parser.add_argument("--cleanup-shopify", action="store_true", help="Delete all Shopify products first")
     parser.add_argument("--verbose", action="store_true", help="Debug logging")
@@ -1113,7 +1209,7 @@ def main():
     for step_num in steps_to_run:
         log.info("\n--- Step %d ---", step_num)
         if step_num == 1:
-            step1_generate_metadata(rows, state, single_sku=args.sku)
+            step1_generate_metadata(rows, state, single_sku=args.sku, limit=args.limit)
         elif step_num == 2:
             step2_generate_printify_mockups(rows, state, single_sku=args.sku)
         elif step_num == 3:
