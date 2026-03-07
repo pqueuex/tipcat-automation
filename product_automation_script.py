@@ -1176,7 +1176,9 @@ def main():
     log.info("=" * 70)
     log.info("Tip Cat Studios — Product Automation Pipeline")
     log.info("=" * 70)
-
+    log.info("Working directory: %s", os.getcwd())
+    log.info("Script location: %s", os.path.abspath(__file__))
+    
     # Validate critical env vars
     missing = []
     if not GEMINI_API_KEY:
@@ -1190,10 +1192,13 @@ def main():
         log.error("Missing env vars: %s", ", ".join(missing))
         sys.exit(1)
 
+    log.info("✓ All env vars present")
+    
     # Load CSV and state
+    log.info("Loading CSV from %s...", CSV_PATH)
     rows = load_csv()
     state = load_state()
-    log.info("Loaded %d products from CSV", len(rows))
+    log.info("✓ Loaded %d products from CSV", len(rows))
 
     # Optional cleanup
     if args.cleanup_shopify:
@@ -1225,4 +1230,11 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        import traceback
+        error_msg = f"\n\n{'='*70}\nFATAL ERROR\n{'='*70}\n{traceback.format_exc()}\n{'='*70}\n"
+        print(error_msg, file=sys.stderr)
+        log.error(error_msg)
+        sys.exit(1)
