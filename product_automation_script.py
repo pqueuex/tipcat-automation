@@ -44,7 +44,12 @@ from PIL import Image
 # Environment & logging
 # ---------------------------------------------------------------------------
 
-load_dotenv(override=True)
+try:
+    load_dotenv(override=True)
+except (AssertionError, Exception) as e:
+    # load_dotenv may fail in certain execution contexts (Cloud Run, subprocess, etc)
+    # This is OK — env vars should be injected via Secret Manager on Cloud Run
+    pass
 
 logging.basicConfig(
     level=logging.INFO,
