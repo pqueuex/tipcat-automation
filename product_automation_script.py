@@ -530,6 +530,14 @@ Return ONLY the JSON object:"""
     log.info("Step 1 complete — %d success, %d failed, %d skipped", 
              success_count, failed_count, skipped_count)
     log.info("  Output: %s (%d total products)", METADATA_PATH, len(results))
+    
+    # Upload metadata to GCS for persistence
+    try:
+        gcs_metadata_path = upload_to_gcs(str(METADATA_PATH), "output/generated_metadata.json")
+        log.info("  ✓ Uploaded to GCS: %s", gcs_metadata_path)
+    except Exception as exc:
+        log.warning("  Could not upload to GCS: %s", exc)
+    
     return results
 
 
@@ -675,6 +683,15 @@ def step2_generate_printify_mockups(rows: List[dict], state: dict, single_sku: s
         time.sleep(2)
 
     log.info("Step 2 complete — mockups in %s", MOCKUP_DIR)
+    
+    # Upload mockup metadata to GCS for persistence
+    try:
+        mockup_meta_path = OUTPUT_DIR / "mockup_metadata.json"
+        gcs_path = upload_to_gcs(str(mockup_meta_path), "output/mockup_metadata.json")
+        log.info("  ✓ Uploaded to GCS: %s", gcs_path)
+    except Exception as exc:
+        log.warning("  Could not upload to GCS: %s", exc)
+    
     return mockup_meta
 
 
