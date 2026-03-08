@@ -2,33 +2,44 @@
 
 **No setup required — run directly in your browser!**
 
+Each product type has its own dedicated notebook with isolated GCS bucket, Cloud Run job, and configuration.
+
 ## 🚀 Quick Start
 
-### 1. Upload Notebook to GCS
+### Choose Your Product Type
 
-From Cloud Shell:
-```bash
-gcloud storage cp TipCat_Pipeline_Manager.ipynb \
-  gs://tipcat-product-designs/notebooks/TipCat_Pipeline_Manager.ipynb
+#### 📱 Phone Cases
+✅ **[OPEN PHONE CASES NOTEBOOK](https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager_phonecases.ipynb)**
+
+- **Bucket:** `tipcat-product-designs`
+- **Config:** `tipcat-phonecases`
+- **Products:** iPhone 11, 16, 16 Pro Max, 17 Air, 17 Pro Max
+- **Job:** `tipcat-phonecases-pipeline`
+
+```
+https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager_phonecases.ipynb
 ```
 
-### 2. Open in Google Colab
+#### 🖱️ Mouse Pads
+✅ **[OPEN MOUSE PADS NOTEBOOK](https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager_mousepads.ipynb)**
 
-Click this link to open immediately:
+- **Bucket:** `tipcat-mousepads`
+- **Config:** `tipcat-mousepads`
+- **Products:** Standard (250x210mm), Large (350x260mm), XL (400x300mm)
+- **Job:** `tipcat-mousepads-pipeline`
 
-✅ **[OPEN IN GOOGLE COLAB](https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager.ipynb)**
-
-Or copy-paste into browser:
 ```
-https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager.ipynb
+https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager_mousepads.ipynb
 ```
 
-### 3. Authenticate & Start Using
+### Authenticate & Start Using
 
 When notebook loads:
-1. First code cell authenticates: `auth.authenticate_user()`
-2. All subsequent cells have access to GCS
-3. Use interactive widgets to manage pipeline
+1. Run Cell 1 to initialize GCS connection
+2. Cell 2 auto-scans for designs in your bucket
+3. Cell 3 runs `refresh_inventory()` to update product list JSON
+4. Cell 4 provides `run_step()` to execute pipeline steps
+5. Cell 5 displays generated metadata
 
 ---
 
@@ -36,95 +47,133 @@ When notebook loads:
 
 From the notebook:
 
-✅ **Upload Designs**
-- Drag-and-drop PNG files
-- Auto-upload to GCS
-- View upload progress
+## 📋 What You Can Do
 
-✅ **Browse Designs**  
-- List all files in bucket
-- See file sizes & dates
-- One-click refresh
+From the notebook (product-specific):
 
-✅ **Generate Metadata**
-- Run Gemini Vision API
-- Pure image-based analysis
-- Set limits for testing
+✅ **List Designs**
+- Scan GCS bucket for PNG files
+- Auto-discover new designs
+- Display file paths
+
+✅ **Refresh Inventory**
+- Generate `product_list.json` with all designs
+- Auto-assign SKU numbers (1-N)
+- Track design status (pending/processing/complete)
 
 ✅ **Run Pipeline Steps**
-- Execute on Cloud Run
-- 4Gi memory, 2 CPU
-- 3-hour timeout
-- Real-time logs
+- Execute via Cloud Run job
+- Config-driven (product type, store, variants)
+- Limit designs for testing
+- Real-time command output
 
-✅ **View Results**
-- Fetch metadata from GCS
-- Preview generated titles, tags, descriptions
-- Download to local
+✅ **View Generated Metadata**
+- Display metadata from Step 1
+- Show titles, tags, descriptions
+- Verify Gemini output quality
 
 ---
 
-## 🔗 Colab Link for Sharing
+## 🔗 Colab Links for Sharing
 
-Share this link with team members:
-
+**Phone Cases:**
 ```
-https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager.ipynb
+https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager_phonecases.ipynb
 ```
 
-Everyone with this link can:
+**Mouse Pads:**
+```
+https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager_mousepads.ipynb
+```
+
+Everyone with these links can:
 - Run notebooks collaboratively
-- Upload/manage designs
-- Execute pipeline steps
+- Upload/manage designs to the correct bucket
+- Execute pipeline steps for that product type
 - View generated metadata
 
-All data stored in shared GCS bucket.
+Each product type uses its own isolated GCS bucket and configuration.
 
 ---
 
 ## 🎯 Typical Workflow
 
+**Phone Cases:**
 ```
-1. Upload PNG → 2. Refresh → 3. Run Step 1 → 4. View Results → 5. Run Steps 2-5
+1. Open phone cases Colab link
+2. Run Cell 1 (initialize GCS connection)
+3. Run Cell 2 (list designs from gs://tipcat-product-designs/)
+4. Run Cell 3 (refresh product inventory)
+5. Run Cell 4 (execute Step 1 with limit=5)
+6. Run Cell 5 (view generated metadata)
+7. Repeat Cell 4 for Steps 2-5
 ```
 
-Takes ~5 minutes for initial setup, then commands are just a few clicks.
+**Mouse Pads:**
+```
+1. Open mouse pads Colab link
+2. Run Cell 1 (initialize GCS connection to gs://tipcat-mousepads/)
+3. Follow same workflow as phone cases
+4. Outputs stored in separate bucket
+```
+
+Takes ~30 seconds to initialize, then each step execution is a single cell run.
 
 ---
 
-## 📊 Example Session
+## 📊 Example Session (Phone Cases)
 
-**Time: 0:00** - Open Colab link
-**Time: 0:30** - Upload 5 new designs 
-**Time: 1:00** - Click "Run Step 1" with limit=5
-**Time: 5:00** - Step 1 completes, view metadata
-**Time: 5:30** - Run Step 2 (Printify mockups)
-**Time: 30:00** - All steps complete
+**Time: 0:00** - Open [Phone Cases Colab link](https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager_phonecases.ipynb)
+**Time: 0:30** - Run Cells 1-3 (initialize, list designs, refresh inventory)
+**Time: 1:00** - Run Cell 4: `run_step(step=1, limit=5)` (metadata generation)
+**Time: 5:00** - Step 1 completes, run Cell 5 to view metadata
+**Time: 5:30** - Run Step 2 (Printify mockups): `run_step(step=2, limit=5)`
+**Time: 35:00** - All 5 steps complete for 5 designs
 
-Total workflow: ~30 minutes for full pipeline on 5 designs
+Total workflow: ~35 minutes for full pipeline on 5 designs
 
 ---
 
 ## 🛠️ Requirements
 
 ✅ Google account (free)  
-✅ Access to `tipcat-product-designs` GCS bucket  
-✅ GCP project: `tipcat-automation`  
-✅ Service account with proper IAM roles  
+✅ Access to GCP project: `tipcat-automation`  
+✅ IAM permissions:
+   - `storage.objectViewer` on design buckets
+   - `run.jobs.run` on Cloud Run jobs
+   - `logging.viewer` for job logs
 
-The notebook handles everything else!
+The notebooks handle GCS authentication automatically in Colab!
 
 ---
 
 ## 📞 Troubleshooting
 
-**"Authentication failed"**
-- Check your Google account has access to `tipcat-automation`
-- Ask project owner to grant you Editor role
+**"Permission denied" on GCS bucket**
+- Verify you have access to the correct bucket:
+  - Phone cases: `gs://tipcat-product-designs/`
+  - Mouse pads: `gs://tipcat-mousepads/`
+- Ask project owner to grant you `storage.objectViewer` role
 
 **"Can't see designs"**
-- Run "Refresh Design List" cell
-- Check GCS bucket: `gsutil ls gs://tipcat-product-designs/designs/`
+- Upload designs to bucket first:
+  ```bash
+  gsutil cp designs/*.png gs://tipcat-product-designs/designs/
+  ```
+- Run Cell 2 to refresh design list
+
+**"Cloud Run job not found"**
+- Verify job exists:
+  ```bash
+  gcloud run jobs describe tipcat-phonecases-pipeline --region=us-central1
+  ```
+- Check you're using the correct notebook for your product type
+
+**"Config not found"**
+- Ensure config files are committed to GitHub:
+  - `configs/tipcat-phonecases.json`
+  - `configs/tipcat-mousepads.json`
+- Pull latest from main branch
 
 **"Step stuck/failed"**
 - Check Cloud Run logs in notebook output

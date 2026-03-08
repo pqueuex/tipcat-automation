@@ -1,8 +1,20 @@
-Colab Link:
-https://colab.research.google.com/url=https://storage.googleapis.com/tipcat-product-designs/notebooks/TipCat_Pipeline_Manager.ipynb
+TipCat Pipeline Manager - Google Colab Links
+============================================
 
-Notebook URL:
-https://storage.googleapis.com/tipcat-product-designs/notebooks/TipCat_Pipeline_Manager.ipynb
+PHONE CASES:
+https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager_phonecases.ipynb
 
-Setup Command:
-gcloud storage cp TipCat_Pipeline_Manager.ipynb gs://tipcat-product-designs/notebooks/
+Bucket: gs://tipcat-product-designs/
+Config: tipcat-phonecases
+Job: tipcat-phonecases-pipeline
+
+
+MOUSE PADS:
+https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager_mousepads.ipynb
+
+Bucket: gs://tipcat-mousepads/
+Config: tipcat-mousepads
+Job: tipcat-mousepads-pipeline
+
+
+See COLAB_README.md for detailed instructions.
