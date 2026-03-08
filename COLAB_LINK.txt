@@ -1,0 +1,8 @@
+Colab Link:
+https://colab.research.google.com/url=https://storage.googleapis.com/tipcat-product-designs/notebooks/TipCat_Pipeline_Manager.ipynb
+
+Notebook URL:
+https://storage.googleapis.com/tipcat-product-designs/notebooks/TipCat_Pipeline_Manager.ipynb
+
+Setup Command:
+gcloud storage cp TipCat_Pipeline_Manager.ipynb gs://tipcat-product-designs/notebooks/
