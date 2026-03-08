@@ -1236,6 +1236,8 @@ def main():
 
 if __name__ == "__main__":
     try:
+        # Print immediately to stdout to confirm container is running
+        print("🚀 Container started, initializing...", flush=True)
         main()
     except Exception as exc:
         import traceback
