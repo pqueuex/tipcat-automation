@@ -59,6 +59,104 @@ logging.basicConfig(
 log = logging.getLogger("tipcat")
 
 # ---------------------------------------------------------------------------
+# Configuration loader (loads from JSON config files)
+# ---------------------------------------------------------------------------
+
+def load_product_config(config_name: str = "tipcat-phonecases") -> Dict[str, Any]:
+    """
+    Load product-specific configuration from JSON file.
+    
+    Args:
+        config_name: Name of config file (without .json extension),
+                     e.g. "tipcat-phonecases", "tipcat-mousepads"
+    
+    Returns:
+        Dictionary with all configuration values
+    
+    Raises:
+        FileNotFoundError: If config file doesn't exist
+        json.JSONDecodeError: If config file is invalid JSON
+    """
+    config_path = Path(__file__).parent / "configs" / f"{config_name}.json"
+    
+    if not config_path.exists():
+        raise FileNotFoundError(f"Config file not found: {config_path}")
+    
+    try:
+        with open(config_path) as f:
+            config = json.load(f)
+    except json.JSONDecodeError as e:
+        raise json.JSONDecodeError(f"Invalid JSON in {config_path}: {e.msg}", e.doc, e.pos)
+    
+    # Validate required top-level keys
+    required_keys = ["name", "product", "store", "gcs", "printify", "gemini", "prompts", "shopify"]
+    missing = [k for k in required_keys if k not in config]
+    if missing:
+        raise ValueError(f"Config {config_path} missing required keys: {missing}")
+    
+    return config
+
+def apply_config(config: Dict[str, Any]) -> None:
+    """
+    Apply configuration from loaded JSON config file to global variables.
+    Overrides environment variables and hardcoded defaults.
+    
+    Args:
+        config: Configuration dictionary loaded from JSON
+    """
+    global GEMINI_API_KEY, GEMINI_MODEL, GEMINI_IMAGE_MODEL
+    global PRINTIFY_API_KEY, PRINTIFY_SHOP_ID, PRINTIFY_BLUEPRINT, VARIANT_MAP
+    global SHOPIFY_STORE, SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET, SHOPIFY_API_VERSION
+    global GCS_BUCKET, GOOGLE_CLOUD_PROJECT
+    global PRODUCT_PRICE, TABLE_PROMPT, HAND_PROMPT
+    global METADATA_PROMPT
+    
+    # Gemini configuration
+    GEMINI_MODEL = config["gemini"].get("model", "gemini-2.5-flash")
+    GEMINI_IMAGE_MODEL = config["gemini"].get("image_model", "gemini-3.1-flash-image-preview")
+    GEMINI_API_KEY = os.environ.get(config["gemini"]["api_key_env"], "")
+    
+    # Printify configuration
+    PRINTIFY_API_KEY = os.environ.get(config["printify"]["api_key_env"], "")
+    PRINTIFY_SHOP_ID = config["printify"].get("shop_id", "")
+    PRINTIFY_BLUEPRINT = config["printify"].get("blueprint_id", 269)
+    VARIANT_MAP = config["printify"].get("variants", {})
+    PRODUCT_PRICE = config["printify"].get("price", "18.00")
+    
+    # Shopify configuration
+    SHOPIFY_STORE = config["store"]["url"]
+    SHOPIFY_CLIENT_ID = os.environ.get(config["store"]["client_id_env"], "")
+    SHOPIFY_CLIENT_SECRET = os.environ.get(config["store"]["client_secret_env"], "")
+    SHOPIFY_API_VERSION = config["store"].get("api_version", "2025-01")
+    
+    # GCS configuration
+    GCS_BUCKET = config["gcs"]["bucket"]
+    GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "tipcat-automation")
+    
+    # Prompts - substitute product name into templates
+    product_type = config["product"]["type"]
+    product_name = config["product"]["name"]
+    
+    TABLE_PROMPT = config["prompts"]["lifestyle_table"].replace(
+        "{product_name}", product_name
+    ).replace("{product_type}", product_type)
+    
+    HAND_PROMPT = config["prompts"]["lifestyle_hand"].replace(
+        "{product_name}", product_name
+    ).replace("{product_type}", product_type)
+    
+    METADATA_PROMPT = config["prompts"]["metadata"].replace(
+        "{product_name}", product_name
+    ).replace("{product_type}", product_type)
+    
+    log.info(f"✓ Applied config: {config['name']}")
+    log.info(f"  Product: {product_type}")
+    log.info(f"  Store: {SHOPIFY_STORE}")
+    log.info(f"  GCS bucket: {GCS_BUCKET}")
+    log.info(f"  Printify shop: {PRINTIFY_SHOP_ID}")
+    log.info(f"  Variants: {list(VARIANT_MAP.keys())}")
+
+# ---------------------------------------------------------------------------
 # Configuration (env vars — injected by Secret Manager on Cloud Run)
 # ---------------------------------------------------------------------------
 
@@ -1204,6 +1302,7 @@ def cleanup_shopify():
 
 def main():
     parser = argparse.ArgumentParser(description="Tip Cat Studios Product Automation Pipeline")
+    parser.add_argument("--config", type=str, default="tipcat-phonecases", help="Config name (e.g., 'tipcat-phonecases', 'tipcat-mousepads')")
     parser.add_argument("--step", type=int, choices=[1, 2, 3, 4, 5], help="Run a single step")
     parser.add_argument("--sku", type=str, help="Process a single SKU only")
     parser.add_argument("--limit", type=int, help="Process only first N products")
@@ -1221,7 +1320,11 @@ def main():
     log.info("Working directory: %s", os.getcwd())
     log.info("Script location: %s", os.path.abspath(__file__))
     
-    # Validate critical env vars
+    # Load and apply product configuration
+    config = load_product_config(args.config)
+    apply_config(config)
+    
+    # Validate critical env vars (now from config)
     missing = []
     if not GEMINI_API_KEY:
         missing.append("GEMINI_API_KEY")
@@ -1234,7 +1337,7 @@ def main():
         log.error("Missing env vars: %s", ", ".join(missing))
         sys.exit(1)
 
-    log.info("✓ All env vars present")
+    log.info("✓ All required credentials present")
     
     # Discover designs from GCS bucket
     log.info("Scanning GCS bucket gs://%s/designs/ for PNG files...", GCS_BUCKET)
