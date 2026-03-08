@@ -494,7 +494,7 @@ Return ONLY the JSON object:"""
                     "metadata": meta,
                     "validation_errors": errors,
                 },
-                "generated_timestamp": datetime.utcnow().isoformat() + "Z",
+                "generated_timestamp": datetime.now(datetime.timezone.utc).isoformat().replace('+00:00', 'Z'),
             })
             state.setdefault("step1", {})[sku] = status
             success_count += 1
