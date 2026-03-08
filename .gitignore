@@ -1,6 +1,7 @@
 # Secrets
 .env
 *.json
+!configs/*.json
 !package.json
 
 # Service account keys
