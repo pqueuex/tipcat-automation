@@ -16,11 +16,11 @@ gcloud storage cp TipCat_Pipeline_Manager.ipynb \
 
 Click this link to open immediately:
 
-✅ **[OPEN IN GOOGLE COLAB](https://colab.research.google.com/url=https://storage.googleapis.com/tipcat-product-designs/notebooks/TipCat_Pipeline_Manager.ipynb)**
+✅ **[OPEN IN GOOGLE COLAB](https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager.ipynb)**
 
 Or copy-paste into browser:
 ```
-https://colab.research.google.com/url=https://storage.googleapis.com/tipcat-product-designs/notebooks/TipCat_Pipeline_Manager.ipynb
+https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager.ipynb
 ```
 
 ### 3. Authenticate & Start Using
@@ -69,7 +69,7 @@ From the notebook:
 Share this link with team members:
 
 ```
-https://colab.research.google.com/url=https://storage.googleapis.com/tipcat-product-designs/notebooks/TipCat_Pipeline_Manager.ipynb
+https://colab.research.google.com/github/pqueuex/tipcat-automation/blob/main/TipCat_Pipeline_Manager.ipynb
 ```
 
 Everyone with this link can:
