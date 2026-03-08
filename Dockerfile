@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-CMD ["python", "product_automation_script.py"]
+ENTRYPOINT ["python", "product_automation_script.py"]
