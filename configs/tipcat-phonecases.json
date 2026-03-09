@@ -1,0 +1,59 @@
+{
+  "name": "tipcat-phonecases",
+  "description": "Tip Cat Studios phone case pipeline",
+  
+  "product": {
+    "name": "Phone Case",
+    "type": "Phone Case",
+    "description": "phone case design"
+  },
+  
+  "store": {
+    "name": "Tip Cat Studios",
+    "url": "tipcat-studios.myshopify.com",
+    "client_id_env": "SHOPIFY_CLIENT_ID",
+    "client_secret_env": "SHOPIFY_CLIENT_SECRET",
+    "api_version": "2025-01"
+  },
+  
+  "gcs": {
+    "bucket": "tipcat-product-designs",
+    "designs_prefix": "designs/",
+    "output_prefix": "output/",
+    "mockups_prefix": "output/mockups/",
+    "gemini_mockups_prefix": "output/gemini_mockups/"
+  },
+  
+  "printify": {
+    "api_key_env": "PRINTIFY_API_KEY",
+    "shop_id": "26630208",
+    "blueprint_id": 269,
+    "provider_id": 1,
+    "variants": {
+      "iPhone 17 Pro Max": 130117,
+      "iPhone 17 Air": 130118,
+      "iPhone 16 Pro Max": 112813,
+      "iPhone 16": 112814,
+      "iPhone 11": 62582
+    },
+    "price": "18.00"
+  },
+  
+  "gemini": {
+    "model": "gemini-2.5-flash",
+    "image_model": "gemini-3.1-flash-image-preview",
+    "api_key_env": "GEMINI_API_KEY"
+  },
+  
+  "prompts": {
+    "metadata": "Analyze this phone case design image and provide structured metadata: title (max 60 characters), teaser, full description highlighting unique elements, exactly 13 tags, category, mood, design highlights (3 items), finish (matte/glossy), colors, and Shopify-formatted HTML description. Return only valid JSON.",
+    "lifestyle_table": "A realistic professional product photograph of an iphone tough case using the provided pregenerated mockup attached to place the product on a wooden table, face down, with a cozy cottagecore vibe, lit by sunlight. vertical 4:3 aspect ratio",
+    "lifestyle_hand": "realistic iphone tough case product mockup using attached product design image held by a womans hand with acrylic nails in a sunlit scene in pov perspective"
+  },
+  
+  "shopify": {
+    "product_type": "Phone Case",
+    "vendor": "Tip Cat Studios",
+    "title_template": "{design_name} iPhone Case"
+  }
+}

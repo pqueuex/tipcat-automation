@@ -1,0 +1,57 @@
+{
+  "name": "tipcat-mousepads",
+  "description": "Tip Cat Studios mouse pad pipeline",
+  
+  "product": {
+    "name": "Mouse Pad",
+    "type": "Mouse Pad",
+    "description": "mouse pad design"
+  },
+  
+  "store": {
+    "name": "Tip Cat Studios",
+    "url": "tipcat-studios.myshopify.com",
+    "client_id_env": "SHOPIFY_CLIENT_ID",
+    "client_secret_env": "SHOPIFY_CLIENT_SECRET",
+    "api_version": "2025-01"
+  },
+  
+  "gcs": {
+    "bucket": "tipcat-mousepads",
+    "designs_prefix": "designs/",
+    "output_prefix": "output/",
+    "mockups_prefix": "output/mockups/",
+    "gemini_mockups_prefix": "output/gemini_mockups/"
+  },
+  
+  "printify": {
+    "api_key_env": "PRINTIFY_API_KEY",
+    "shop_id": "26630208",
+    "blueprint_id": 0,
+    "provider_id": 1,
+    "variants": {
+      "Standard (250x210mm)": 0,
+      "Large (350x260mm)": 0,
+      "XL (400x300mm)": 0
+    },
+    "price": "12.00"
+  },
+  
+  "gemini": {
+    "model": "gemini-2.5-flash",
+    "image_model": "gemini-3.1-flash-image-preview",
+    "api_key_env": "GEMINI_API_KEY"
+  },
+  
+  "prompts": {
+    "metadata": "Analyze this mouse pad design image and provide structured metadata: title (max 60 characters), teaser, full description highlighting unique elements, exactly 13 tags, category, mood, design highlights (3 items), material (rubber/fabric), colors, and Shopify-formatted HTML description. Return only valid JSON.",
+    "lifestyle_table": "A realistic product photograph of a mouse pad with the provided design placed on a clean desk with a gaming mouse on top, professional desk setup. horizontal 16:9 aspect ratio",
+    "lifestyle_hand": "Realistic mouse pad product mockup using attached product design image held in someone's hands showing the texture and colors in natural lighting"
+  },
+  
+  "shopify": {
+    "product_type": "Mouse Pad",
+    "vendor": "Tip Cat Studios",
+    "title_template": "{design_name} Mouse Pad"
+  }
+}

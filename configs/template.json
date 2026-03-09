@@ -1,0 +1,57 @@
+{
+  "name": "PRODUCT_TYPE-STORE",
+  "description": "Configuration for a specific product type and Shopify store combination",
+  
+  "product": {
+    "name": "Product Type Name",
+    "type": "Phone Case",
+    "description": "What is this product? (used in Gemini prompts)"
+  },
+  
+  "store": {
+    "name": "Store Name",
+    "url": "store.myshopify.com",
+    "client_id_env": "STORE_SHOPIFY_CLIENT_ID",
+    "client_secret_env": "STORE_SHOPIFY_CLIENT_SECRET",
+    "api_version": "2025-01"
+  },
+  
+  "gcs": {
+    "bucket": "product-type-store",
+    "designs_prefix": "designs/",
+    "output_prefix": "output/",
+    "mockups_prefix": "output/mockups/",
+    "gemini_mockups_prefix": "output/gemini_mockups/"
+  },
+  
+  "printify": {
+    "api_key_env": "PRINTIFY_API_KEY",
+    "shop_id": "12345678",
+    "blueprint_id": 269,
+    "provider_id": 1,
+    "variants": {
+      "Model 1": 12345,
+      "Model 2": 12346,
+      "Model 3": 12347
+    },
+    "price": "18.00"
+  },
+  
+  "gemini": {
+    "model": "gemini-2.5-flash",
+    "image_model": "gemini-3.1-flash-image-preview",
+    "api_key_env": "GEMINI_API_KEY"
+  },
+  
+  "prompts": {
+    "metadata": "Analyze this {product_name} design image and provide structured metadata: title (max 60 characters), teaser, full description highlighting unique elements, exactly 13 tags, category, mood, design highlights (3 items), finish (matte/glossy), colors, and Shopify-formatted HTML description. Return only valid JSON.",
+    "lifestyle_table": "A realistic professional product photograph of {product_name} using the provided pregenerated mockup attached to place the product on a wooden table, face down, with a cozy cottagecore vibe, lit by sunlight. vertical 4:3 aspect ratio",
+    "lifestyle_hand": "Realistic {product_name} product mockup using attached product design image held by a woman's hand with acrylic nails in a sunlit scene in pov perspective"
+  },
+  
+  "shopify": {
+    "product_type": "Phone Case",
+    "vendor": "Tip Cat Studios",
+    "title_template": "{design_name} {product_type}"
+  }
+}
