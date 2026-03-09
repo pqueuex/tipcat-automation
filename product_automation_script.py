@@ -32,7 +32,7 @@ import random
 import re
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -400,10 +400,28 @@ def _extract_json(text: str) -> dict:
         except json.JSONDecodeError:
             pass  # Try other strategies
     
-    # Strategy 2: Extract from markdown code blocks
-    m = re.search(r"```(?:json)?\s*([\s\S]*?)```", text, re.IGNORECASE)
+    # Strategy 2: Extract from markdown code blocks (various formats)
+    for pattern in [
+        r"```(?:json)?\s*([\s\S]*?)```",  # Standard markdown
+        r"```\s*\n([\s\S]*?)\n```",          # With newlines
+        r"^```json\s*$\n([\s\S]*?)\n^```",  # json on separate line (multiline)
+    ]:
+        m = re.search(pattern, text, re.IGNORECASE | re.MULTILINE)
+        if m:
+            json_text = m.group(1).strip()
+            try:
+                return json.loads(json_text)
+            except json.JSONDecodeError:
+                continue  # Try next pattern
+    
+    # Strategy 2b: Look for any ```...``` block
+    m = re.search(r"```([\s\S]*?)```", text)
     if m:
         json_text = m.group(1).strip()
+        # Remove language identifier if present (e.g., "json" on first line)
+        lines = json_text.split('\n')
+        if lines and not lines[0].strip().startswith('{'):
+            json_text = '\n'.join(lines[1:])
         try:
             return json.loads(json_text)
         except json.JSONDecodeError:
@@ -612,7 +630,7 @@ Return ONLY the JSON object:"""
                     "metadata": meta,
                     "validation_errors": errors,
                 },
-                "generated_timestamp": datetime.now(datetime.timezone.utc).isoformat().replace('+00:00', 'Z'),
+                "generated_timestamp": datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
             })
             state.setdefault("step1", {})[sku] = status
             success_count += 1
