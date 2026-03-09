@@ -259,13 +259,18 @@ def list_designs_from_gcs() -> List[dict]:
     client = storage.Client(project=GOOGLE_CLOUD_PROJECT)
     bucket = client.bucket(GCS_BUCKET)
     
-    # List all blobs with .png extension in designs/ folder
+    # List all blobs with .png extension in designs/ folder (top level only)
     blobs = list(bucket.list_blobs(prefix="designs/"))
     
     # Deduplicate by filename to avoid re-processing re-uploaded copies
     # (e.g., designs/blue_polkadot_pattern.png, designs/blue_polkadot_pattern_1.png, etc)
+    # Also skip subfolder uploads (designs/step2-uploads/, etc)
     seen_filenames = {}
     for blob in blobs:
+        # Skip subfolders (only process files directly in designs/)
+        if blob.name.count("/") > 1:
+            continue
+        
         if not blob.name.lower().endswith('.png'):
             continue
         
