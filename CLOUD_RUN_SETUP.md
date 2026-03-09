@@ -92,7 +92,7 @@ Run a test job with a single design:
 gcloud run jobs execute tipcat-phonecases-pipeline \
   --region=us-central1 \
   --project=tipcat-automation \
-  --args=--config,tipcat-phonecases,--step,1,--limit,1,--verbose
+  --args="--config=tipcat-phonecases,--step=1,--limit=1,--verbose"
 ```
 
 Monitor the job:

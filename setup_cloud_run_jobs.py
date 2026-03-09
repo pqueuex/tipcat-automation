@@ -94,7 +94,7 @@ class CloudRunSetup:
         print(f"  gcloud run jobs execute {job_name} \\")
         print(f"    --region={self.region} \\")
         print(f"    --project={self.project} \\")
-        print(f"    --args=--config,{config_name},--step,1,--limit,1,--verbose")
+        print(f"    --args=\"--config={config_name},--step=1,--limit=1,--verbose\"")
     
     def create_mouse_pads_job(self):
         """Create tipcat-mousepads-pipeline Cloud Run job."""
@@ -153,7 +153,7 @@ class CloudRunSetup:
         print(f"  gcloud run jobs execute {job_name} \\")
         print(f"    --region={self.region} \\")
         print(f"    --project={self.project} \\")
-        print(f"    --args=--config,{config_name},--step,1,--limit,1,--verbose")
+        print(f"    --args=\"--config={config_name},--step=1,--limit=1,--verbose\"")
 
 
 if __name__ == "__main__":

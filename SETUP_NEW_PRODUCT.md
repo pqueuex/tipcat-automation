@@ -148,7 +148,7 @@ gcloud run jobs update my-store-new-product-pipeline \
 gcloud run jobs execute my-store-new-product-pipeline \
   --region=us-central1 \
   --project=tipcat-automation \
-  --args=--config,my-store-new-product,--step,1,--limit,1,--verbose
+  --args="--config=my-store-new-product,--step=1,--limit=1,--verbose"
 ```
 
 **Note**: Add Shopify secrets to Google Secret Manager before running:
@@ -224,7 +224,7 @@ Test the configuration with a small batch:
 gcloud run jobs execute my-store-new-product-pipeline \
   --region=us-central1 \
   --project=tipcat-automation \
-  --args=--config,my-store-new-product,--step,1,--limit,2,--verbose
+  --args="--config=my-store-new-product,--step=1,--limit=2,--verbose"
 ```
 
 ### Option C: Local Testing (Dev)
@@ -295,7 +295,7 @@ for step in 1 2 3 4 5; do
   gcloud run jobs execute my-store-new-product-pipeline \
     --region=us-central1 \
     --project=tipcat-automation \
-    --args=--config,my-store-new-product,--step,$step,--verbose
+    --args="--config=my-store-new-product,--step=$step,--verbose"
   
   # Poll for completion
   sleep 30

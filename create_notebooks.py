@@ -37,14 +37,12 @@ nb_phonecases['cells'][1]['source'] = config_code.split('\n')
 run_step_code = """def run_step(step=1, limit=None, verbose=True, config=CONFIG_NAME):
     \"\"\"Execute a single pipeline step via Cloud Run.\"\"\"
     args = [
-        f"--config",
-        config,
-        f"--step",
-        str(step)
+        f"--config={config}",
+        f"--step={step}"
     ]
     
     if limit and int(limit) > 0:
-        args.extend(["--limit", str(int(limit))])
+        args.append(f"--limit={int(limit)}")
     
     if verbose:
         args.append("--verbose")
@@ -52,11 +50,9 @@ run_step_code = """def run_step(step=1, limit=None, verbose=True, config=CONFIG_
     cmd = [
         "gcloud", "run", "jobs", "execute", CLOUD_RUN_JOB,
         f"--region={CLOUD_RUN_REGION}",
-        f"--project={GCP_PROJECT}"
+        f"--project={GCP_PROJECT}",
+        f"--args={','.join(args)}"
     ]
-    
-    # Add args as comma-separated string
-    cmd.append(f"--args={','.join(args)}")
     
     print(f"\\n🚀 Running Step {step}...")
     print(f"Command: {' '.join(cmd)}")
