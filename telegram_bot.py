@@ -2327,6 +2327,7 @@ def main() -> None:
     global _active_config
     global _active_store_key
     global _current_run_meta
+    global _current_process
 
     # ── CLI flag: --discover ─────────────────────────────────────────────────
     if "--discover" in sys.argv:
