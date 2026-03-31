@@ -12,3 +12,7 @@ Pillow>=10.0.0
 # HTTP & utilities
 requests>=2.32.0
 python-dotenv>=1.0.0
+
+# Bot server (webhook mode on Cloud Run)
+flask>=3.0.0
+gunicorn>=21.0.0
