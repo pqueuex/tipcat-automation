@@ -424,9 +424,23 @@ def retry(fn, max_attempts=3, base_delay=2.0):
 
 
 def load_state() -> dict:
-    """Load checkpoint state from disk."""
+    """Load checkpoint state from disk, falling back to GCS for Cloud Run retries."""
     if STATE_PATH.exists():
         return json.loads(STATE_PATH.read_text())
+    # Fresh container (Cloud Run retry) — restore from GCS so completed steps are skipped
+    try:
+        from google.cloud import storage as _gcs
+        _bucket = _gcs.Client(project=os.environ.get("GOOGLE_CLOUD_PROJECT", "tipcat-automation")) \
+            .bucket(os.environ.get("GCS_BUCKET", "tipcat-product-designs"))
+        blob = _bucket.blob("output/pipeline_state.json")
+        if blob.exists():
+            data = json.loads(blob.download_as_text())
+            STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+            STATE_PATH.write_text(json.dumps(data, indent=2))
+            log.info("Restored pipeline state from GCS (%d step keys)", len(data))
+            return data
+    except Exception as _e:
+        log.debug("load_state GCS restore skipped: %s", _e)
     return {}
 
 
@@ -1086,7 +1100,19 @@ def step1_generate_metadata(rows: List[dict], state: dict, single_sku: str = Non
     failed_count = 0
     skipped_count = 0
 
-    # Load existing results if resuming
+    # Load existing results if resuming; restore from GCS on a fresh Cloud Run container
+    if not METADATA_PATH.exists():
+        try:
+            from google.cloud import storage as _gcs
+            _bucket = _gcs.Client(project=os.environ.get("GOOGLE_CLOUD_PROJECT", "tipcat-automation")) \
+                .bucket(os.environ.get("GCS_BUCKET", "tipcat-product-designs"))
+            blob = _bucket.blob("output/generated_metadata.json")
+            if blob.exists():
+                METADATA_PATH.parent.mkdir(parents=True, exist_ok=True)
+                METADATA_PATH.write_text(blob.download_as_text())
+                log.info("Restored generated_metadata.json from GCS")
+        except Exception as _e:
+            log.debug("metadata GCS restore skipped: %s", _e)
     if METADATA_PATH.exists():
         existing = json.loads(METADATA_PATH.read_text())
         done_skus = {r["sku"] for r in existing}
